@@ -1,5 +1,5 @@
 //enable / disable inputelements in the valueArea
-function changeForm(enable){
+function enableDisableInputElements(enable){
   var ar = document.querySelectorAll("#valueArea input");
   if(ar != null){
     ar.forEach(function(element) {
@@ -27,22 +27,21 @@ function saveForm(){
   }
 }
 
-
 function enabledChanged() {
   if(document.querySelector("#isEnabled").checked){
     console.log("enabled");
-    changeForm(false);
+    enableDisableInputElements(false);
   } else {
     console.log("disabled");
-    changeForm(true);
+    enableDisableInputElements(true);
   }
 }
 
-
-function restoreOptions() {
-
+function setupForm() {
+  //add listener to enable disable input fields
   document.querySelector("#isEnabled").addEventListener("change", enabledChanged);
 
+  //append change Listener to all input fields
   var ar = document.querySelectorAll("input");
   if(ar != null){
     ar.forEach(function(element) {
@@ -50,32 +49,24 @@ function restoreOptions() {
     });
   }
 
-  //load values
+  //load stored values
   var ar = document.querySelectorAll("input");
   if(ar != null){
     ar.forEach(function(element) {
-      console.log("ID:" + element.id);
+      //get storage values
       var promis = browser.storage.local.get("object_"+element.id);
-
-      promis.then(function(settingObj){
-        //got
+      promis.then(function(settingObj){ //got setting
         console.log("Got Settings " + JSON.stringify(settingObj));
-
-        var fieldValue = settingObj['object_'+element.id];
-        if(fieldValue != null){  
-
+        var fieldValue = settingObj['object_'+element.id]; //extract setting value
+        if(fieldValue != null){ 
+          //set value (corresponding to input type)
           if(element.type == "checkbox"){
-            if(fieldValue){ // fieldValue = true
-              element.checked = true;
-            } 
+              element.checked = fieldValue;
           } else if(element.type == "text"){
             element.value = fieldValue;
           } 
-            console.log("Loaded value " + fieldValue );
         }
-
         enabledChanged(); // refresh enabled status
-
       }, function(err) {
         // body...
         console.err("Could not get Setting " + element.id);
@@ -85,6 +76,5 @@ function restoreOptions() {
   }
 }
 
-
-document.addEventListener("DOMContentLoaded", restoreOptions);
+document.addEventListener("DOMContentLoaded", setupForm);
 //document.querySelector("form").addEventListener("submit", saveOptions);
