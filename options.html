@@ -10,6 +10,20 @@
       input:valid {
         background: rgba(0,255,0,0.5);
       }
+
+
+      label {
+        display: block;
+        font-size: 0.8em;
+        margin-bottom: -1em;
+      }
+
+      input {
+        display: block;
+        position: relative;
+        left: 1em;
+      }
+
     </style>
   </head>
 
@@ -19,7 +33,7 @@
           <!-- field for hostname !-->
           <label>Remote Host: <input type="text" id="settings_host" pattern="^(http|https)://.+$" required></label><br />
           <label>Username: <input type="text" id="settings_user" pattern="^.{1,}" required></label><br />
-          <label>Password: <input type="password" id="settings_pw" pattern=".{6,}" required></label><br />
+          <label>API Key: <input type="password" id="settings_pw" pattern=".{6,}" required></label><br />
           <br />
           <br />
           <button type="submit">Save</button>

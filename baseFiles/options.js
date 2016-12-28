@@ -28,7 +28,7 @@ function setupForm() {
   settings.loadSettings().then(function(res){
       console.log("settings loaded");
       console.log(settings);
-      //set values to dom
+      //set values to dom elements
       var inputElement = document.querySelector("#settings_host");
       if(inputElement != null)
         inputElement.value = settings.host;

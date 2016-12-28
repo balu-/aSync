@@ -13,6 +13,7 @@
   "permissions": [
     "bookmarks",
     "storage",
+    "notifications",
     "<all_urls>"
   ],
 

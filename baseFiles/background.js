@@ -1,15 +1,26 @@
 console.log("hallo")
 
 // mache einen request optional mit headers (für put / post ...)
-function makeRequest(apiFunction, requestParams){
+function makeRequest(apiFunction, settings, requestParams){
+	function makeBasicauth(user, password) {
+	  var tok = user + ':' + password;
+	  var hash = window.btoa(tok);
+	  return "Basic " + hash;
+	}
+
 	// set default params if no request params submitted
 	if(requestParams == null ){
+
+		var authString = makeBasicauth(settings.user, settings.pw);
+		console.log("Auth string "+authString);
 		requestParams = {
 			method: 'GET', 
 			mode: 'cors', 
 			redirect: 'follow',
 			headers: new Headers({
-				'Content-Type': 'text/plain'
+				'Content-Type': 'text/plain',
+  				'Authorization': authString
+
 			})
 		};
 		/*
@@ -20,7 +31,8 @@ function makeRequest(apiFunction, requestParams){
 		*/
 	}
 
-	var request = new Request('http://icanhazip.com/'+apiFunction, requestParams);
+	//var request = new Request('http://localhost:8080/'+apiFunction);
+	var request = new Request('http://localhost:8080/'+apiFunction, requestParams);
 
 	return new Promise(
 		// The resolver function is called with the ability to resolve or
@@ -33,17 +45,44 @@ function makeRequest(apiFunction, requestParams){
 					//successfull request
 					//json() - Returns a promise that resolves with a JSON object.
 					//text() - Returns a promise that resolves with a USVString (text).
-					resolve(response.text());
+					//resolve(response.text());
+					resolve(response.json());
 				}
 				reject();
 			}).catch(function(err) {
 				// Error :(
-				console.err(err);
+				console.error(err);
 				reject();
 			});
 	});
 }
 
-makeRequest().then(function(text){
-	console.log("API "+text);
+
+var settings = new settingsClass();
+settings.loadSettings().then(function(){
+	makeRequest("collections",settings).then(function(obj){
+		console.log("API "+obj);
+		console.log(obj);
+		if(typeof (obj.msg) !== "undefined"){
+			console.log("I've got a message \""+obj.msg+"\"");
+			browser.notifications.create( {
+	        	type: "basic",
+	       		title: "Blah",
+	       		message: obj.msg
+			});
+
+		}
+	}).catch(function (obj){ 
+		console.error("fehler in request");
+		console.error(obj);
+
+
+		browser.notifications.create( {
+        	type: "basic",
+       		title: "Blah",
+       		message: "A Message"
+		});
+
+
+	});
 })
