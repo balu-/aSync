@@ -63,11 +63,26 @@ settings.loadSettings().then(function(){
 	makeRequest("collections",settings).then(function(obj){
 		console.log("API "+obj);
 		console.log(obj);
+		console.log("-" + typeof (obj));
+		//if liste?
+		if(typeof (obj) == "Array"){
+			obj.forEach(function(element) {
+			    browser.notifications.create( {
+		        	type: "basic",
+		       		title: "aSync - Message",
+		       		message: element.name
+				});
+
+			});
+		} else {
+			//unespected
+		}
+
 		if(typeof (obj.msg) !== "undefined"){
 			console.log("I've got a message \""+obj.msg+"\"");
 			browser.notifications.create( {
 	        	type: "basic",
-	       		title: "Blah",
+	       		title: "aSync - Message",
 	       		message: obj.msg
 			});
 
@@ -79,8 +94,8 @@ settings.loadSettings().then(function(){
 
 		browser.notifications.create( {
         	type: "basic",
-       		title: "Blah",
-       		message: "A Message"
+       		title: "aSync - Error",
+       		message: "fehler in request"
 		});
 
 
