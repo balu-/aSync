@@ -17,7 +17,9 @@
 
     <form>
           <!-- field for hostname !-->
-          <label>Remote Host: <input type="text" id="settings_host" pattern="^(http|https)://.+$"></label><br />
+          <label>Remote Host: <input type="text" id="settings_host" pattern="^(http|https)://.+$" required></label><br />
+          <label>Username: <input type="text" id="settings_user" pattern="^.{1,}" required></label><br />
+          <label>Password: <input type="password" id="settings_pw" pattern=".{6,}" required></label><br />
           <br />
           <br />
           <button type="submit">Save</button>

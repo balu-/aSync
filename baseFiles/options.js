@@ -6,6 +6,12 @@ function saveForm(){
   var inputElement = document.querySelector("#settings_host");
   if(inputElement != null)
     settings.setHost(inputElement.value);
+  var inputElement = document.querySelector("#settings_user");
+  if(inputElement != null)
+    settings.setUser(inputElement.value);
+  var inputElement = document.querySelector("#settings_pw");
+  if(inputElement != null)
+    settings.setPw(inputElement.value);
 }
 
 function setupForm() {
@@ -26,7 +32,13 @@ function setupForm() {
       var inputElement = document.querySelector("#settings_host");
       if(inputElement != null)
         inputElement.value = settings.host;
-  });
+      var inputElement = document.querySelector("#settings_user");
+      if(inputElement != null)
+        inputElement.value = settings.user;
+      var inputElement = document.querySelector("#settings_pw");
+      if(inputElement != null)
+        inputElement.value = settings.pw;
+      });
 }
 
 document.addEventListener("DOMContentLoaded", setupForm);
