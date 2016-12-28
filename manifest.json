@@ -21,7 +21,7 @@
   },
 
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["classFiles/settings.js", "baseFiles/background.js"]
   }
 
 }
