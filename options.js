@@ -1,46 +1,67 @@
-//enable / disable inputelements in the valueArea
-function enableDisableInputElements(enable){
-  var ar = document.querySelectorAll("#valueArea input");
-  if(ar != null){
-    ar.forEach(function(element) {
-      element.disabled=enable;
-    });
-  }
+/* ./classFiles/settings.js */
+/*settings.js*/
+
+class settingsClass{
+	constructor() {
+		this.host = "";
+      	this.user = "";
+      	this.pw = "";
+  	}
+
+  	loadSettings(){
+  		var sT = this; //variable to walk this to inner scope
+  		//load settings from storage
+		return browser.storage.local.get("settings").then(function(value){
+			console.log("this.load");
+			console.log(value);
+			if(typeof value.settings !== 'undefined'){
+				value = value.settings;
+				if (typeof value.host !== 'undefined') {
+	      			sT.host = value.host;
+	      			console.log("set host" + sT.host);
+				}
+	      		if (typeof value.user !== 'undefined') 
+	      			sT.user = value.user;
+	      		if (typeof value.pw !== 'undefined') 
+	      			sT.pw = value.pw;
+      		}
+      	});
+  	}
+
+  	setHost(value){
+  		this.host = value;
+  		this.saveSettings();
+  	}
+
+  	setUser(value){
+  		this.user = value;
+  		this.saveSettings();
+  	}
+
+  	setPw(value){
+  		this.pw = value;
+  		this.saveSettings();
+  	}
+
+  	saveSettings(){
+  		console.log("this.Save");
+  		var stObj = {};
+  		stObj["settings"] = this;
+  		console.log(stObj);
+  		browser.storage.local.set(stObj);
+  	}
 }
+var settings;
 
 //save form settings to local storage
 function saveForm(){
-  var ar = document.querySelectorAll("input");
-  if(ar != null){
-    ar.forEach(function(element) {
-      var stObj = {};
-      
-        if(element.type == "checkbox"){
-           stObj["object_"+element.id] = element.checked;
-        } else if(element.type == "text"){
-          stObj["object_"+element.id] = element.value;
-        } 
-        console.log("Save: " + element.id +" - Value - " +  stObj["object_"+element.id]);
-        browser.storage.local.set(stObj);
-      
-    });
-  }
-}
-
-function enabledChanged() {
-  if(document.querySelector("#isEnabled").checked){
-    console.log("enabled");
-    enableDisableInputElements(false);
-  } else {
-    console.log("disabled");
-    enableDisableInputElements(true);
-  }
+  /* get values from dom*/
+  var inputElement = document.querySelector("#settings_host");
+  if(inputElement != null)
+    settings.setHost(inputElement.value);
 }
 
 function setupForm() {
-  //add listener to enable disable input fields
-  document.querySelector("#isEnabled").addEventListener("change", enabledChanged);
-
   //append change Listener to all input fields
   var ar = document.querySelectorAll("input");
   if(ar != null){
@@ -50,30 +71,15 @@ function setupForm() {
   }
 
   //load stored values
-  var ar = document.querySelectorAll("input");
-  if(ar != null){
-    ar.forEach(function(element) {
-      //get storage values
-      var promis = browser.storage.local.get("object_"+element.id);
-      promis.then(function(settingObj){ //got setting
-        console.log("Got Settings " + JSON.stringify(settingObj));
-        var fieldValue = settingObj['object_'+element.id]; //extract setting value
-        if(fieldValue != null){ 
-          //set value (corresponding to input type)
-          if(element.type == "checkbox"){
-              element.checked = fieldValue;
-          } else if(element.type == "text"){
-            element.value = fieldValue;
-          } 
-        }
-        enabledChanged(); // refresh enabled status
-      }, function(err) {
-        // body...
-        console.err("Could not get Setting " + element.id);
-      });
-
-    });
-  }
+  settings = new settingsClass();
+  settings.loadSettings().then(function(res){
+      console.log("settings loaded");
+      console.log(settings);
+      //set values to dom
+      var inputElement = document.querySelector("#settings_host");
+      if(inputElement != null)
+        inputElement.value = settings.host;
+  });
 }
 
 document.addEventListener("DOMContentLoaded", setupForm);
