@@ -74,19 +74,8 @@ settings.loadSettings().then(function(){
 				});
 
 			});
-		} else {
-			//unespected
 		}
 
-		if(typeof (obj.msg) !== "undefined"){
-			console.log("I've got a message \""+obj.msg+"\"");
-			browser.notifications.create( {
-	        	type: "basic",
-	       		title: "aSync - Message",
-	       		message: obj.msg
-			});
-
-		}
 	}).catch(function (obj){ 
 		console.error("fehler in request");
 		console.error(obj);
