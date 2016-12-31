@@ -17,11 +17,11 @@
   ],
 
   "options_ui": {
-    "page": "options.html"
+    "page": "content/options.html"
   },
 
   "background": {
-    "scripts": ["classFiles/settings.js", "baseFiles/background.js"]
+    "scripts": ["content/settings.js", "content/background.js"]
   }
 
 }
