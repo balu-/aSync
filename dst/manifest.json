@@ -21,7 +21,7 @@
   },
 
   "background": {
-    "scripts": ["content/settings.js", "content/background.js"]
+    "scripts": ["content/background.js"]
   }
 
 }

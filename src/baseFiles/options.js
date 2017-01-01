@@ -1,3 +1,4 @@
+require('./lib/settings.js');
 var settings;
 
 //save form settings to local storage
